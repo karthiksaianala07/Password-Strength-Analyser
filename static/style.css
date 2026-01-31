@@ -1,57 +1,85 @@
 body {
-    background: radial-gradient(circle at top left, #1a2a6c, #240b36);
-    min-height: 100vh;
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Inter', sans-serif;
-    color: white;
     margin: 0;
 }
 
-.container { display: flex; flex-direction: column; gap: 20px; align-items: center; }
-
 .glass-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 30px;
-    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2.5rem;
+    border-radius: 24px;
     width: 380px;
     text-align: center;
+    color: white;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* Gauge Styling */
-.score-container { margin-bottom: 20px; }
-.circular-progress {
+.input-group {
     position: relative;
-    height: 120px; width: 120px;
-    border-radius: 50%;
-    margin: 0 auto;
-    display: flex; align-items: center; justify-content: center;
-    background: conic-gradient(#ff4d4d 0deg, rgba(255,255,255,0.1) 0deg);
+    margin: 25px 0 10px 0;
 }
-.circular-progress::before {
-    content: ""; position: absolute;
-    height: 100px; width: 100px;
-    border-radius: 50%; background: #130f40;
-}
-#percentage-text { position: relative; font-size: 1.5rem; font-weight: 800; }
 
-.input-group { position: relative; margin: 20px 0; }
 .input-group input {
-    width: 100%; padding: 12px; border-radius: 8px;
-    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);
-    color: white; box-sizing: border-box;
+    width: 100%;
+    padding: 14px 85px 14px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
 }
 
-.input-icons { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; gap: 10px; cursor: pointer; color: #aaa; }
+.input-icons {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 15px;
+}
 
-.meter-container { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-#strength-bar { height: 100%; width: 0; transition: 0.4s; }
+.input-icons i {
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5);
+    transition: 0.2s;
+}
 
-/* History Table */
-.history-card { font-size: 0.9rem; }
-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-th, td { text-align: left; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.text-btn { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 0.8rem; }
+.input-icons i:hover { color: #00ffcc; }
+
+.meter-container {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+#strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
+}
+
+.stats p { font-size: 0.85rem; margin: 8px 0; opacity: 0.9; }
+
+.secondary-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+.secondary-btn:hover { background: rgba(255, 255, 255, 0.25); }

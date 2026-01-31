@@ -3,37 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShieldCheck | Password Analyzer</title>
+    <title>ShieldCheck Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="glass-card">
-        <h1>ShieldCheck</h1>
-        <p>Advanced Strength Analysis</p>
-        
-        <div class="input-group">
-            <input type="password" id="password" placeholder="Enter password...">
-            <div class="input-icons">
-                <i class="fas fa-copy" id="copyBtn" title="Copy to clipboard"></i>
-                <i class="fas fa-eye" id="togglePassword"></i>
+    <div class="container">
+        <div class="glass-card">
+            <h1>ShieldCheck</h1>
+            
+            <div class="score-container">
+                <div class="circular-progress">
+                    <span id="percentage-text">0%</span>
+                </div>
+                <p>Safety Score</p>
             </div>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Test your password...">
+                <div class="input-icons">
+                    <i class="fas fa-copy" id="copyBtn"></i>
+                    <i class="fas fa-eye" id="togglePassword"></i>
+                </div>
+            </div>
+
+            <div class="meter-container">
+                <div id="strength-bar"></div>
+            </div>
+
+            <div class="stats">
+                <p id="time-label">Crack Time: -</p>
+                <p id="feedback-label">Ready for analysis</p>
+            </div>
+
+            <button id="generateBtn" class="secondary-btn">
+                <i class="fas fa-magic"></i> Generate Random
+            </button>
         </div>
 
-        <div class="meter-container">
-            <div id="strength-bar"></div>
+        <div class="glass-card history-card">
+            <h3>Recent Checks</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Entry</th>
+                        <th>Time to Crack</th>
+                    </tr>
+                </thead>
+                <tbody id="history-body"></tbody>
+            </table>
+            <button id="clearBtn" class="text-btn">Clear History</button>
         </div>
-
-        <div class="stats">
-            <p id="time-label">Crack Time: -</p>
-            <p id="feedback-label">Start typing...</p>
-        </div>
-
-        <button id="generateBtn" class="secondary-btn">
-            <i class="fas fa-magic"></i> Generate Strong Password
-        </button>
     </div>
-
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

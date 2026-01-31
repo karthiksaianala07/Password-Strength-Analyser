@@ -1,39 +1,49 @@
+const passwordInput = document.getElementById('password');
 const segments = document.querySelectorAll('.segment');
-const entropyLabel = document.getElementById('entropy-val');
+const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981', '#00ff88'];
+
+passwordInput.addEventListener('input', async () => {
+    const pwd = passwordInput.value;
+    if (!pwd) return resetUI();
+
+    const res = await fetch('/analyze', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ password: pwd })
+    });
+    const data = await res.json();
+    updateUI(data);
+});
 
 function updateUI(data) {
-    // 1. Update Segmented Meter
+    const score = data.score;
     segments.forEach((seg, i) => {
-        if (i < data.score + 1) {
-            seg.style.background = getScoreColor(data.score);
-            seg.style.boxShadow = `0 0 10px ${getScoreColor(data.score)}`;
+        if (i <= score) {
+            seg.style.background = colors[score];
+            seg.style.boxShadow = `0 0 8px ${colors[score]}`;
         } else {
-            seg.style.background = 'rgba(255,255,255,0.1)';
+            seg.style.background = 'rgba(255,255,255,0.05)';
             seg.style.boxShadow = 'none';
         }
     });
 
-    // 2. Update Entropy
     document.getElementById('entropy-display').style.display = 'block';
-    entropyLabel.innerText = `${data.entropy} bits`;
-
-    // 3. Update Brute Force Scenarios
-    document.getElementById('scen-fast').innerText = data.crack_times.offline_fast;
+    document.getElementById('entropy-val').innerText = data.entropy;
+    document.getElementById('feedback-main').innerText = data.feedback;
+    document.getElementById('scen-pc').innerText = data.crack_times.offline_fast;
     document.getElementById('scen-gpu').innerText = data.crack_times.gpu_cluster;
-
-    // 4. Detailed Feedback
-    const suggestList = data.suggestions.map(s => `<li>${s}</li>`).join('');
-    document.getElementById('feedback-label').innerHTML = `<strong>${data.feedback}</strong><ul>${suggestList}</ul>`;
+    
+    const list = document.getElementById('suggestions-list');
+    list.innerHTML = data.suggestions.map(s => `<li>${s}</li>`).join('');
 }
 
-function getScoreColor(score) {
-    if (score <= 1) return '#ff4d4d';
-    if (score === 2) return '#ffaa00';
-    if (score === 3) return '#00ccff';
-    return '#00ff88';
+function resetUI() {
+    segments.forEach(s => s.style.background = 'rgba(255,255,255,0.05)');
+    document.getElementById('entropy-display').style.display = 'none';
+    document.getElementById('feedback-main').innerText = 'Awaiting analysis...';
+    document.getElementById('suggestions-list').innerHTML = '';
 }
 
-// Diceware Button
 document.getElementById('dicewareBtn').addEventListener('click', async () => {
     const res = await fetch('/generate_diceware');
     const data = await res.json();

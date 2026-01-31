@@ -1,8 +1,4 @@
-import math
-import hashlib
-import requests
-import secrets
-import string
+import math, hashlib, requests, secrets, string
 from flask import Flask, render_template, request, jsonify, session
 from zxcvbn import zxcvbn
 
@@ -16,45 +12,49 @@ def get_entropy(password):
     if any(c in string.ascii_uppercase for c in password): charset_size += 26
     if any(c in string.digits for c in password): charset_size += 10
     if any(c in string.punctuation for c in password): charset_size += 32
-    # Entropy formula: log2(charset_size ^ length)
     return round(len(password) * math.log2(max(charset_size, 1)), 2)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
     data = request.get_json()
-    password = data.get('password', '')
-    if not password: return jsonify({"score": 0})
+    pwd = data.get('password', '')
+    if not pwd: return jsonify({"score": 0, "history": session.get('history', [])})
 
-    result = zxcvbn(password)
-    entropy = get_entropy(password)
+    res = zxcvbn(pwd)
     
-    # Professional Cracking Scenarios
-    crack_times = {
-        "online_throttled": result['crack_times_display']['online_no_throtle_10_per_second'],
-        "offline_fast": result['crack_times_display']['offline_fast_hashing_1e10_per_second'],
-        "gpu_cluster": "Minutes" if result['score'] < 3 else "Years" # Simplified for logic
+    analysis = {
+        "password": pwd[:3] + "****" if len(pwd) > 3 else "****",
+        "score": res['score'],
+        "entropy": get_entropy(pwd),
+        "crack_times": {
+            "offline_fast": res['crack_times_display']['offline_fast_hashing_1e10_per_second'],
+            "gpu_cluster": "Minutes" if res['score'] < 3 else "Centuries"
+        },
+        "feedback": res['feedback']['warning'] or "Optimal configuration.",
+        "suggestions": res['feedback']['suggestions']
     }
 
-    return jsonify({
-        "score": result['score'],
-        "entropy": entropy,
-        "crack_times": crack_times,
-        "feedback": result['feedback']['warning'] or "Strong alignment with security best practices.",
-        "suggestions": result['feedback']['suggestions']
-    })
+    if 'history' not in session: session['history'] = []
+    history = session['history']
+    history.insert(0, analysis)
+    session['history'] = history[:5]
+    
+    return jsonify(analysis)
 
 @app.route('/generate_diceware', methods=['GET'])
 def generate_diceware():
-    # Simple word list for demonstration; in prod, use a 7k+ word list
-    words = ["apple", "battery", "staple", "correct", "horse", "blue", "secure", "cloud", "tower"]
-    passphrase = "-".join(secrets.choice(words) for _ in range(4))
-    return jsonify({"password": passphrase})
+    # Example list; use a full 7776 word list for production
+    words = ["nebula", "cipher", "shield", "carbon", "vault", "matrix", "vector", "proxy"]
+    return jsonify({"password": "-".join(secrets.choice(words) for _ in range(4))})
 
-@app.route('/generate', methods=['GET'])
-def generate():
-    alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
-    password = ''.join(secrets.choice(alphabet) for _ in range(16))
-    return jsonify({"password": password})
+@app.route('/clear', methods=['POST'])
+def clear_history():
+    session.pop('history', None)
+    return jsonify({"status": "success"})
 
 if __name__ == '__main__':
     app.run(debug=True)

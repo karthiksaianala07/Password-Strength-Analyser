@@ -28,6 +28,32 @@
             <p id="time-label">Crack Time: -</p>
             <p id="feedback-label">Start typing...</p>
         </div>
+        <div id="entropy-display" style="display:none;">
+    <span class="entropy-badge"><i class="fas fa-microchip"></i> <span id="entropy-val">0 bits</span></span>
+</div>
+
+<div class="meter-segments">
+    <div class="segment"></div>
+    <div class="segment"></div>
+    <div class="segment"></div>
+    <div class="segment"></div>
+    <div class="segment"></div>
+</div>
+
+<div class="comparison-grid">
+    <div class="comparison-item">
+        <small>Standard PC</small>
+        <div id="scen-fast">-</div>
+    </div>
+    <div class="comparison-item">
+        <small>GPU Cluster</small>
+        <div id="scen-gpu">-</div>
+    </div>
+</div>
+
+<button id="dicewareBtn" class="text-btn" style="color:var(--primary-green); margin-top:10px;">
+    <i class="fas fa-font"></i> Generate Secure Passphrase (Diceware)
+</button>
 
         <button id="generateBtn" class="secondary-btn">
             <i class="fas fa-magic"></i> Generate Strong Password
@@ -37,3 +63,4 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
+

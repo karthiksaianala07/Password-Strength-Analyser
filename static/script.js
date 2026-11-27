@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const chkSymbols = document.getElementById('chkSymbols');
 
     // Elements - Generator
+    const genInitialState = document.getElementById('genInitialState');
+    const genActiveState = document.getElementById('genActiveState');
+    const initialGenerateBtn = document.getElementById('initialGenerateBtn');
     const generatedPassword = document.getElementById('generatedPassword');
     const copyGenBtn = document.getElementById('copyGenBtn');
     const regenerateBtn = document.getElementById('regenerateBtn');
@@ -34,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const optLower = document.getElementById('optLower');
     const optDigits = document.getElementById('optDigits');
     const optSymbols = document.getElementById('optSymbols');
+
+    let hasGenerated = false;
 
     const toast = document.getElementById('toast');
     let toastTimeout = null;
@@ -287,9 +292,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Generator events
+    initialGenerateBtn.addEventListener('click', () => {
+        hasGenerated = true;
+        genInitialState.classList.add('hidden');
+        genActiveState.classList.remove('hidden');
+        triggerGenerate();
+    });
+
     lengthSlider.addEventListener('input', () => {
         lengthValue.innerText = lengthSlider.value;
-        triggerGenerate();
+        if (hasGenerated) {
+            triggerGenerate();
+        }
     });
 
     [optUpper, optLower, optDigits, optSymbols].forEach(opt => {
@@ -298,7 +312,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!optUpper.checked && !optLower.checked && !optDigits.checked && !optSymbols.checked) {
                 opt.checked = true;
             }
-            triggerGenerate();
+            if (hasGenerated) {
+                triggerGenerate();
+            }
         });
     });
 
@@ -319,6 +335,5 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast("Transferred to Analyzer!");
     });
 
-    // Initial load
-    triggerGenerate();
+    // Initial state: waiting for user to click Generate Password
 });

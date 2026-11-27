@@ -85,9 +85,16 @@
                     <h2><i class="fas fa-wand-magic-sparkles"></i> Password Generator</h2>
                 </div>
 
-                <!-- Output Box -->
-                <div class="gen-output-box">
-                    <input type="text" id="generatedPassword" readonly value="Generating...">
+                <!-- Initial State: Prominent Generate Button -->
+                <div id="genInitialState" class="gen-initial-box">
+                    <button type="button" id="initialGenerateBtn" class="btn-generate-main">
+                        <i class="fas fa-key"></i> Generate Password
+                    </button>
+                </div>
+
+                <!-- Active State: Output Box (Revealed upon generation) -->
+                <div id="genActiveState" class="gen-output-box hidden">
+                    <input type="text" id="generatedPassword" readonly value="">
                     <div class="gen-actions">
                         <button type="button" id="copyGenBtn" class="btn-icon" title="Copy password">
                             <i class="fas fa-copy"></i>
